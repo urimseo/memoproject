@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+    h4 {
+        color: gray;
+    }
+
+    form {
+        display: inline;
+    }
+</style>
+
+<div class="container">
+    <br>
+    <h4>상세페이지</h4>
+    <br>
+    <br>
+    <h2><strong>{{ memo.title }}</strong></h2>
+    <p>{{ memo.pub_date }}</p>
+    <p>{{ memo.body }}</p>
+    <br>
+
+    <form action="{% url 'edit' memo.id %}" method="POST">
+        {% csrf_token %}
+        <input type="submit" value="수정하기">
+    </form>
+
+    <form action="{% url 'delete' memo.id %}" method="POST">
+        {% csrf_token %}
+        <input type="submit" value = "삭제하기">
+    </form>
+    <br>
+    <br>
+
+    <a href="{% url 'home' %}">돌아가기</a>
+</div>
+<hr>
+<form action="{% url 'add_comment' memo.id %}" method="POST">
+    {% csrf_token %}
+    <input type="submit" class="btn btn-dark" value = "Add Comment"><br><br>
+</form>
+{% for comment in memo.comments.all %}
+    <div class = "comment">
+        <div class="date">{{comment.created_date}}</div>
+        <strong>{{ comment.author }}</strong>
+        <p>{{ comment.text|linebreaks }}</p>
+    </div>
+{% empty %}
+    <P>No comments here yet</P>
+{% endfor %}
+{% endblock %}
